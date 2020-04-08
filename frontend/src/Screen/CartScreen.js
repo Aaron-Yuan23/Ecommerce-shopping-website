@@ -1,25 +1,30 @@
 import React, { useEffect } from 'react';
+import { addToCart, removeFromCart } from '../actions/cartActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../actions/cartActions';
+import { Link } from 'react-router-dom';
+function CartScreen(props) {
 
+  const cart = useSelector(state => state.cart);
 
-function CartScreen(props){
-    const cart =useSelector(state => state.cart);
+  const { cartItems } = cart;
 
-    const{cartItems} = cart;
-
-    const productId= props.match.params.id;
-    const qty =props.location.search? Number(props.location.search.split("=")[1]):1;
-    const dispatch= useDispatch();
-    const removeFromCartHandler=(productId)=>{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+  const productId = props.match.params.id;
+  const qty = props.location.search ? Number(props.location.search.split("=")[1]) : 1;
+  const dispatch = useDispatch();
+  const removeFromCartHandler = (productId) => {
+    dispatch(removeFromCart(productId));
+  }
+  useEffect(() => {
+    if (productId) {
+      dispatch(addToCart(productId, qty));
     }
-    useEffect(() =>{
-        if(productId){
-            dispatch(addToCart(productId, qty));
-        }
-    }, [])
-    return <div className="cart">
+  }, []);
+
+  const checkoutHandler = () => {
+    props.history.push("/signin?redirect=shipping");
+  }
+
+  return <div className="cart">
     <div className="cart-list">
       <ul className="cart-list-container">
         <li>
